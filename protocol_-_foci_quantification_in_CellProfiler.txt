@@ -1,0 +1,5 @@
+1. Start with subselecting slices or making maximum projections with the ImageJ macros - they both take all the images from the input directory.
+2. Cell profiler pipeline will give You a nuclei.csv file with foci counts per every segmented nuclei. It is important that each cell type or treatment is in a separate folder - the metadata on the location is later used to categorize data. Start with fine-tuning the thresholds. Press the "eye" button next to IdentifyPrimaryObjects modules and try to change the lower and upper bounds on threshold as well as the size of adaptive window in the test mode.
+3. Proceed with the R script according to guides inside it.
+   	
+
