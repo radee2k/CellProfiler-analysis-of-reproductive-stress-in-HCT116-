@@ -74,11 +74,11 @@ write.table(stat, file = 'foci_quantification_table.txt', quote = FALSE, sep = '
 # Change the default theme used by ggplot2.
 theme_new <- theme_set(theme_gray())
 theme_new <- theme_update(
- axis.text.x=element_text(vjust = 0.5),
- strip.background = element_rect(fill='#FFFFFF'),
+ axis.text.x = element_text(vjust = 0.5),
+ strip.background = element_rect(fill = '#FFFFFF'),
  plot_title = element_text(hjust = 0.5),
- axis.title=element_text(size=13),
- axis.text=element_text(size=11)
+ axis.title = element_text(size = 13),
+ axis.text = element_text(size = 11)
 )
 
 
@@ -105,7 +105,7 @@ for (i in label) {
  boxplot <- ggplot(nuc_cat[label == i], aes(x = label, y = get(foci_count))) +
   geom_violin() +
   geom_boxplot(outlier.shape = NA, width = .25) +
-  geom_errorbar(data = stat[label == i], aes(x = label, ymin = mean - sd, ymax = mean + sd), width=.1, inherit.aes = F) +
+  geom_errorbar(data = stat[label == i], aes(x = label, ymin = mean - sd, ymax = mean + sd), width = .1, inherit.aes = F) +
   geom_text(data = stat, aes(label = paste('mean =', round(mean,digits=2), '\n', 
                        'median =', round(median, digits=2), '\n',
                        'cell count =', n_cells, '\n', 
@@ -156,14 +156,14 @@ for (i in label) {
   facet_wrap(~label) +
   geom_vline(data = stat[label == i],
         aes(xintercept = mean),
-        color = '#E69F00', size=1) +
+        color = '#E69F00', size = 1) +
   geom_vline(data = stat[label == i],
         aes(xintercept = median),
-        color = '#56B4E9', size=1) +
-  geom_text(data = stat[label == i], aes(label = paste('mean =', round(mean,digits=2)), x = lab_pos[1], y = lab_pos[2]), 
+        color = '#56B4E9', size = 1) +
+  geom_text(data = stat[label == i], aes(label = paste('mean =', round(mean, digits = 2)), x = lab_pos[1], y = lab_pos[2]), 
        nudge_x = .3, nudge_y = 8, color = '#E69F00',
        size = 3, check_overlap = T) +
-  geom_text(data = stat[label == i], aes(label = paste('median =', round(median, digits=2)), x = lab_pos[1], y = lab_pos[2]), 
+  geom_text(data = stat[label == i], aes(label = paste('median =', round(median, digits = 2)), x = lab_pos[1], y = lab_pos[2]), 
        nudge_x = .3, nudge_y = 5, color = '#56B4E9',
        size = 3, check_overlap = TRUE) +
   geom_text(data = stat[label == i], aes(label = paste('n =', n), x = lab_pos[1], y = lab_pos[2]), 
