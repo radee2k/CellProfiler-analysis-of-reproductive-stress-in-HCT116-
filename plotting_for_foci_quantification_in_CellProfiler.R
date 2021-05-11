@@ -24,7 +24,7 @@ rm(list = ls())
 
 # Install and load packages used in this script.
 
-install.packages(c("ggplot2", "data.table", "ggpubr"))
+install.packages(c('ggplot2', 'data.table', 'ggpubr'))
 library(ggplot2)
 library(ggpubr)
 library(data.table)
@@ -32,21 +32,21 @@ library(data.table)
 
 
 # Set the input directory with the nuclei.csv file.
-dir_1 <- "~\\experiment\\data"
+dir_1 <- '~/experiment/data'
 dir.create(dir_1)
 setwd(dir_1)
 
 # Load the segmentation output file and change the Metadata_FOLDER column class to factor.
-nuc <- fread("nuclei.csv")
+nuc <- fread('nuclei.csv')
 nuc[, Metadata_FOLDER := as.factor(Metadata_FOLDER)]
 
 # Set the output directiory for the plots.
-dir_2 <- "~\\experiment\\foci_quantification_-_boxplots_and_histograms"
+dir_2 <- '~/experiment/foci_quantification_-_boxplots_and_histograms'
 dir.create(dir_2)
 setwd(dir_2)
 
 # Set the name of the column with foci counts as a variable which will be used for plotting.
-foci_count <- "Children_Foci_......_Count"
+foci_count <- 'Children_Foci_......_Count'
 
 # Show the order of Metadata_FOLDER labels.
 nuc[, levels(Metadata_FOLDER)]
@@ -55,28 +55,28 @@ nuc[, levels(Metadata_FOLDER)]
 ID <- c(nuc[, levels(Metadata_FOLDER)])
 
 # List conditions/treatments used in the same order as the corresponding Metadata_FOLDER labels.
-label_1 <- c("condition 1", "condition 2", "condition 1", "condition 2")
+label_1 <- c('condition 1', 'condition 2', 'condition 1', 'condition 2')
 
 # List additional labels, like cell type. If no such labels are required, just remove the exemplary ones.
 # Those labels should be repeated for each imageset. Number of elements in quotation marks should
 # be the same as 
-label_2 <- c("cell type 1", "cell type 1", "cell type 2", "cell type 2")
+label_2 <- c('cell type 1', 'cell type 1', 'cell type 2', 'cell type 2')
 
 # Make a data.table with labels.
 cond <- data.table(Metadata_FOLDER = as.factor(ID), label_1, label_2)
 
 # Add columns with labels to the dataset and set their class to factor.
-nuc_cat <- nuc[cond, on = "Metadata_FOLDER"]
+nuc_cat <- nuc[cond, on = 'Metadata_FOLDER']
 nuc_cat[, ':=' (label_1 = as.factor(label_1), label_2 = as.factor(label_2))]
 
 # Calculate statistics to be shown on plots.
 stat <- nuc_cat[, .(mean = mean(get(foci_count)),
-                    median = as.double(median(get(foci_count))), 
-                    sd = sd(get(foci_count)),
-                    n = sum(get(foci_count))), by = .(label_1, label_2)][order(label_1, label_2)]
+          median = as.double(median(get(foci_count))), 
+          sd = sd(get(foci_count)),
+          n = sum(get(foci_count))), by = .(label_1, label_2)][order(label_1, label_2)]
 
 # Save the statistics as a table with name as specified by the variable 'table.name'.
-table.name <- "table_name"
+table.name <- 'table_name'
 
 write.table(stat, file = paste0('foci_quantification_table_', table.name, '.txt'), quote = FALSE, sep = '\t', row.names = FALSE, col.names = TRUE)
 
@@ -87,11 +87,11 @@ write.table(stat, file = paste0('foci_quantification_table_', table.name, '.txt'
 # Change the default theme used by ggplot2.
 theme_new <- theme_set(theme_gray())
 theme_new <- theme_update(
-  axis.text.x=element_text(vjust = 0.5),
-  strip.background = element_rect(fill="#FFFFFF"),
-  plot.title = element_text(hjust = 0.5),
-  axis.title=element_text(size=13),
-  axis.text=element_text(size=11)
+ axis.text.x=element_text(vjust = 0.5),
+ strip.background = element_rect(fill='#FFFFFF'),
+ plot.title = element_text(hjust = 0.5),
+ axis.title=element_text(size=13),
+ axis.text=element_text(size=11)
 )
 
 # Order the labels as in the initial vectors.
@@ -115,24 +115,24 @@ plot_width <- 5
 plot_height <- 4
 
 # Set the title of the plot.
-plot_title <- "Title of this plot"
+plot_title <- 'Title of this plot'
 
 # Plot for each treatment and cell type on one, faceted plot. To show outliers change 
 # the NA value of 'outlier.shape' to a number.
 boxplot <- ggplot(nuc_cat, aes(x = label_1, y = get(foci_count))) +
-              geom_violin() +
-              geom_boxplot(outlier.shape = NA, width = .25) +
-              geom_errorbar(data = stat, aes(x = label_1, ymin = mean - sd, ymax = mean + sd), width=.1, inherit.aes = F) +
-              geom_text(data = stat, aes(label = paste("mean =", round(mean,digits=2), "\n", 
-                                           "median =", round(median, digits=2), "\n",
-                                           "cell count =", n_cells, '\n', 
-                                           "foci count =", n_foci), y = lab_pos), 
-                        nudge_x = .3, size = 3,  check_overlap = TRUE) +
-              ylab("Foci Count") +
-              xlab("") +
-              coord_cartesian(ylim = h) +
-              guides(colour = F, size = F) +
-              ggtitle(plot_title) 
+       geom_violin() +
+       geom_boxplot(outlier.shape = NA, width = .25) +
+       geom_errorbar(data = stat, aes(x = label_1, ymin = mean - sd, ymax = mean + sd), width=.1, inherit.aes = F) +
+       geom_text(data = stat, aes(label = paste('mean =', round(mean,digits=2), '\n', 
+                      'median =', round(median, digits=2), '\n',
+                      'cell count =', n_cells, '\n', 
+                      'foci count =', n_foci), y = lab_pos), 
+            nudge_x = .3, size = 3, check_overlap = TRUE) +
+       ylab('Foci Count') +
+       xlab('') +
+       coord_cartesian(ylim = h) +
+       guides(colour = F, size = F) +
+       ggtitle(plot_title) 
 
 
 # Show the output plot (its dimensions will depend on those of the viewing window).
@@ -140,13 +140,13 @@ boxplot
 
 # Save the plot as a png file.
 ggsave(plot = boxplot,
-       paste0("output_boxplot_", plot_title, ".png"),   
-       scale = 1.3,  dpi = 600,
-       width = plot_width, height = plot_height,
-       units = "in")
+    paste0('output_boxplot_', plot_title, '.png'),  
+    scale = 1.3, dpi = 600,
+    width = plot_width, height = plot_height,
+    units = 'in')
 
 # If the label_2 was specified plot with facets.
-boxplot_facet <-  boxplot + facet_wrap(~label_2)
+boxplot_facet <- boxplot + facet_wrap(~label_2)
 
 # Show the output plot (its dimensions will depend on those of the viewing window).
 boxplot_facet
@@ -156,13 +156,13 @@ boxplot_facet
 # 'comparisons' of the following function to label_2 and the faceting variable to label_1.
 # To change what type of test is performed, change the character string of 'method'.
 boxplot_stat <- boxplot + stat_compare_means(comparisons = list(levels(nuc_cat$label_1)), 
-                                        method = "wilcox.test", label = "p.format",
-                                        show.legend = T, label.y = h[2], size = 3) 
+                    method = 'wilcox.test', label = 'p.format',
+                    show.legend = T, label.y = h[2], size = 3) 
 
 # If faceting was done
 boxplot_stat <- boxplot_facet + stat_compare_means(comparisons = list(levels(nuc_cat$label_1)), 
-                                             method = "wilcox.test", label = "p.format",
-                                             show.legend = T, label.y = h[2], size = 3) 
+                       method = 'wilcox.test', label = 'p.format',
+                       show.legend = T, label.y = h[2], size = 3) 
 
 # Show the output plot (its dimensions will depend on those of the viewing window).
 boxplot_stat
@@ -170,10 +170,10 @@ boxplot_stat
 
 # Save the plot with the comparison as a png file.
 ggsave(plot = boxplot_stat,
-       paste0("output_boxplot_with_test_", plot_title, ".png"),   
-       scale = 1.3,  dpi = 600,
-       width = plot_width, height = plot_height,
-       units = "in")
+    paste0('output_boxplot_with_test_', plot_title, '.png'),  
+    scale = 1.3, dpi = 600,
+    width = plot_width, height = plot_height,
+    units = 'in')
 
 
 
@@ -194,53 +194,53 @@ lab_pos <- c(30, 20)
 bin_size <- 30
 
 histogram <- ggplot(nuc_cat) +
-              geom_histogram(aes(x = get(foci_count),
-                             y = 100*..count.. / sapply(PANEL, FUN=function(x) sum(count[PANEL == x])), 
-                             
-                             alpha=I(.8)), binwidth = bin_size) +
-              facet_wrap(~label_1) +
-              geom_vline(data = stat,
-                         aes(xintercept = mean),
-                         color = "#E69F00", size=1) +
-              geom_vline(data = stat,
-                         aes(xintercept = median),
-                         color = "#56B4E9", size=1) +
-              geom_text(data = stat, aes(label = paste("mean =", round(mean,digits=2)), x = lab_pos[1], y = lab_pos[2]), 
-                        nudge_x = .3, nudge_y = 8, color = "#E69F00",
-                        size = 3,  check_overlap = T) +
-              geom_text(data = stat, aes(label = paste("median =", round(median, digits=2)), x = lab_pos[1], y = lab_pos[2]), 
-                        nudge_x = .3, nudge_y  =  5, color = "#56B4E9",
-                        size = 3,  check_overlap = TRUE) +
-              geom_text(data = stat, aes(label = paste("cell count =", n_cells, "\n", "foci count =", n_foci), x = lab_pos[1], y = lab_pos[2]), 
-                        nudge_x = .3, nudge_y  = -1,
-                        size = 3,  check_overlap = TRUE) +
-              coord_cartesian(xlim = c(lim_hist[1], lim_hist[2])) +
-              ylab("Relative frequency [%]") +
-              xlab("") +
-              ggtitle(plot_title) 
+       geom_histogram(aes(x = get(foci_count),
+               y = 100*..count.. / sapply(PANEL, FUN=function(x) sum(count[PANEL == x])), 
+               
+               alpha=I(.8)), binwidth = bin_size) +
+       facet_wrap(~label_1) +
+       geom_vline(data = stat,
+             aes(xintercept = mean),
+             color = '#E69F00', size=1) +
+       geom_vline(data = stat,
+             aes(xintercept = median),
+             color = '#56B4E9', size=1) +
+       geom_text(data = stat, aes(label = paste('mean =', round(mean,digits=2)), x = lab_pos[1], y = lab_pos[2]), 
+            nudge_x = .3, nudge_y = 8, color = '#E69F00',
+            size = 3, check_overlap = T) +
+       geom_text(data = stat, aes(label = paste('median =', round(median, digits=2)), x = lab_pos[1], y = lab_pos[2]), 
+            nudge_x = .3, nudge_y = 5, color = '#56B4E9',
+            size = 3, check_overlap = TRUE) +
+       geom_text(data = stat, aes(label = paste('cell count =', n_cells, '\n', 'foci count =', n_foci), x = lab_pos[1], y = lab_pos[2]), 
+            nudge_x = .3, nudge_y = -1,
+            size = 3, check_overlap = TRUE) +
+       coord_cartesian(xlim = c(lim_hist[1], lim_hist[2])) +
+       ylab('Relative frequency [%]') +
+       xlab('') +
+       ggtitle(plot_title) 
 
 # Show the output plot.
 histogram
 
 # Save the plot as a png file.
 ggsave(plot = histogram,
-       paste0("output_histogram_", plot_title, ".png"),   
-       scale = 1.3,  dpi = 600,
-       width = plot_width, height = plot_height,
-       units = "in")
+    paste0('output_histogram_', plot_title, '.png'),  
+    scale = 1.3, dpi = 600,
+    width = plot_width, height = plot_height,
+    units = 'in')
 
 # If the label_2 was specified plot with facets.
 histogram_facet <- histogram + facet_grid(cols = vars(label_1), rows = vars(label_2))
 
 # Show the output plot.
 histogram_facet
-  
+ 
 # Save the plot with facets as a png file.
 ggsave(plot = histogram_facet,
-       paste0("output_histogram_facet_", plot_title, ".png"),   
-       scale = 1.3,  dpi = 600,
-       width = plot_width, height = plot_height,
-       units = "in")
+    paste0('output_histogram_facet_', plot_title, '.png'),  
+    scale = 1.3, dpi = 600,
+    width = plot_width, height = plot_height,
+    units = 'in')
 
 
 
