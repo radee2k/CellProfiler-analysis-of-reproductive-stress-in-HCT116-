@@ -151,8 +151,7 @@ for (i in label) {
  histogram <- ggplot(nuc_cat[label == i]) +
   geom_histogram(aes(x = get(foci_count),
             y = 100*..count.. / sapply(PANEL, FUN=function(x) sum(count[PANEL == x])), 
-            
-            alpha=I(.8)), bins = bin_size) +
+            alpha = I(.8)), bins = bin_size) +
   facet_wrap(~label) +
   geom_vline(data = stat[label == i],
         aes(xintercept = mean),
